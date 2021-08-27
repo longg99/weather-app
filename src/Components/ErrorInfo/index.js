@@ -5,7 +5,7 @@ export default function ErrorInfo({ showAlert, handleClose }) {
     if (showAlert) {
         console.log("hello there")
         return (
-            <Alert variant="danger" transition="true">
+            <Alert variant="danger">
                 <Alert.Heading>Error</Alert.Heading>
                 <p>
                 

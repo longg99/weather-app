@@ -30,7 +30,7 @@ function App() {
       //call the api and get the current weather
       getWeatherDataByCity(city).then((res) => {
         console.log(res.data);
-        // setWeather(res.data);
+        setWeather(res.data);
       });
     }
     else {
@@ -65,7 +65,7 @@ function App() {
 
   //close alert
   const handleClose = () => {
-    setShowAlert(!showAlert)
+    setShowAlert(!showAlert);
   }
 
   console.log(showAlert)
@@ -76,14 +76,10 @@ function App() {
         <p className="display-5 text-center">
           Good { partOfDay }! Welcome to my weather app.</p>
         <CitySearch city={city} 
-          ref={elem => elemRef.current["citySearch"] = elem}
+          //pass this function down
+          handleSearchOnClick={ handleSearchOnClick }
         />
-        <Button style={{marginTop: 10}} className="align-items-center" 
-          onClick={handleSearchOnClick} 
-          aria-expanded="false" aria-controls="weather alert" 
-        >
-          Show the current weather
-        </Button>
+        
         <Collapse in={ showAlert } >
           <div id="alert">
             <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }/>
