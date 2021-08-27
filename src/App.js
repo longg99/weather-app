@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Container, Button, Collapse, Fade } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeatherData, getWeatherDataByCity } from "./Components/apis";
-import CitySearch from "./Components/CitySearch";
+import { CitySearch } from "./Components/CitySearch";
 import Weather from "./Components/Weather";
 import ErrorInfo from "./Components/ErrorInfo";
 
@@ -15,8 +15,13 @@ function App() {
   //state for show/hide the weather component
   const [openWeather, setOpenWeather] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  //state for the error we catch
+  const [error, setError] = useState("");
+  //unit, metric by default
+  const [unit, setUnit] = useState("metric");
 
   //useRef to get the current elem (obj)
+  //use ref forwarding
   const elemRef = useRef({});
   
   useEffect(() => {
@@ -26,21 +31,22 @@ function App() {
 
   //this effect will be used every time the city or country changes
   useEffect(() =>{
-    if (country === "") {
-      //call the api and get the current weather
-      getWeatherDataByCity(city).then((res) => {
-        console.log(res.data);
-        setWeather(res.data);
-      });
+    //only call the api when the user enter a city
+    if (city !== "") {
+      if (country === "") {
+        //call the api and get the current weather
+        getWeatherDataByCity(city, unit).then((res) => {
+          setWeather(res.data);
+        });
+      }
+      else {
+        //call the api using city and country
+        getWeatherData(city, country, unit).then((res) => {
+          setWeather(res.data);
+        });
+      }
     }
-    else {
-      //call the api using city and country
-      getWeatherData(city, country).then((res) => {
-        console.log(res.data);
-        // setWeather(res.data);
-      });
-    }
-  }, [city, country])
+  }, [city, country, unit])
 
   //display the part of day according to the current time
   let partOfDay;
@@ -50,25 +56,42 @@ function App() {
 
   //handle the search btn on click
   const handleSearchOnClick = () => {
+    //first set the city (and country)
+    setCity(elemRef.current["cityName"].value);
+    setCountry(elemRef.current["countryName"].value);
+
     if(city === "") {
       //show the alert
       setShowAlert(!showAlert);
+      //for debugging only
+      // setOpenWeather(!openWeather);
     }
     else {  
       //else show the weather based on the city passed
       //based on the value of the input field
-      setCity(elemRef)
       setShowAlert(false);
       setOpenWeather(!openWeather);
     }
   }
+
+  console.log("city " + city + " country " + country)
 
   //close alert
   const handleClose = () => {
     setShowAlert(!showAlert);
   }
 
-  console.log(showAlert)
+  const weatherData = useMemo(() => {
+    if (weather) {
+      return {
+
+      }
+    }
+    return {};
+  }, [weather])
+
+  console.log("weather: " , weather);
+
   return (
     <Container fluid>
       <div className="d-flex justify-content-center align-items-center
@@ -78,16 +101,17 @@ function App() {
         <CitySearch city={city} 
           //pass this function down
           handleSearchOnClick={ handleSearchOnClick }
+          //pass the ref down so we can access the field in the form
+          ref={ elemRef }
         />
-        
-        <Collapse in={ showAlert } >
-          <div id="alert">
+        {/* <Collapse in={ showAlert } > */}
+          {/* <div id="alert"> */}
             <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }/>
-          </div>
-        </Collapse>
+          {/* </div> */}
+        {/* </Collapse> */}
         <Collapse in={ openWeather }>
           <div id="weather">
-            <Weather data={weather} city={city} />
+            <Weather data={ weather } city={city} unit={unit}/>
           </div>
         </Collapse>
       </div>
