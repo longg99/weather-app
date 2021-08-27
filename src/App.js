@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Container, Button, Collapse, Form } from "react-bootstrap";
+import { Container, Button, Collapse, Fade } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeatherData, getWeatherDataByCity } from "./Components/apis";
 import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
+import ErrorInfo from "./Components/ErrorInfo";
 
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
   const [weather, setWeather] = useState({});
   const [time, setTime] = useState(new Date().getHours());
   //state for show/hide the weather component
-  const [open, setOpen] = useState(false);
+  const [openWeather, setOpenWeather] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   //useRef to get the current elem (obj)
   const elemRef = useRef({});
@@ -24,7 +26,7 @@ function App() {
 
   //this effect will be used every time the city or country changes
   useEffect(() =>{
-    if (country == "") {
+    if (country === "") {
       //call the api and get the current weather
       getWeatherDataByCity(city).then((res) => {
         console.log(res.data);
@@ -40,8 +42,6 @@ function App() {
     }
   }, [city, country])
 
-  console.log(weather);
-
   //display the part of day according to the current time
   let partOfDay;
   if (time < 12) partOfDay = "morning";
@@ -51,33 +51,45 @@ function App() {
   //handle the search btn on click
   const handleSearchOnClick = () => {
     if(city === "") {
-      // alert("City name is required!")
-      return (
-        <div class="alert alert-primary alert-dismissible" role="alert" id="liveAlert">
-  <strong>Nice!</strong> You've triggered this alert.
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-      )
+      //show the alert
+      setShowAlert(!showAlert);
     }
     else {  
-      setOpen(!open);
+      //else show the weather based on the city passed
+      //based on the value of the input field
+      setCity(elemRef)
+      setShowAlert(false);
+      setOpenWeather(!openWeather);
     }
   }
 
+  //close alert
+  const handleClose = () => {
+    setShowAlert(!showAlert)
+  }
+
+  console.log(showAlert)
   return (
     <Container fluid>
       <div className="d-flex justify-content-center align-items-center
        flex-column vh-100">
         <p className="display-5 text-center">
           Good { partOfDay }! Welcome to my weather app.</p>
-        <CitySearch city={city}/>
+        <CitySearch city={city} 
+          ref={elem => elemRef.current["citySearch"] = elem}
+        />
         <Button style={{marginTop: 10}} className="align-items-center" 
           onClick={handleSearchOnClick} 
-          aria-expanded={open} aria-controls="weather" 
+          aria-expanded="false" aria-controls="weather alert" 
         >
           Show the current weather
         </Button>
-        <Collapse in={open}>
+        <Collapse in={ showAlert } >
+          <div id="alert">
+            <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }/>
+          </div>
+        </Collapse>
+        <Collapse in={ openWeather }>
           <div id="weather">
             <Weather data={weather} city={city} />
           </div>
