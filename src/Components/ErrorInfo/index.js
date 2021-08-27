@@ -1,49 +1,23 @@
-import { Modal, Button } from 'react-bootstrap';
+import { Alert, Button } from 'react-bootstrap';
 import React from 'react';
 
 export default function ErrorInfo({ showAlert, handleClose }) {
     console.log(showAlert)
-    // if (showAlert) {
-    //     return (
-    //         <Alert variant="danger">
-    //             <Alert.Heading>Error</Alert.Heading>
-    //             <p>
-    //                 You must enter a city first!
-    //             </p>
-    //             <hr />
-    //             <div className="d-flex justify-content-end">
-    //                 <Button onClick={handleClose} variant="outline-success">
-    //                     Close 
-    //                 </Button>
-    //             </div>
-    //         </Alert>
-    //     )
+    if (showAlert) {
         return (
-            <Modal
-            showAlert={ showAlert }
-            handleClose={ handleClose }
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                Modal heading
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>Centered Modal</h4>
+            <Alert variant="danger">
+                <Alert.Heading>Error</Alert.Heading>
                 <p>
-                Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                consectetur ac, vestibulum at eros.
+                    You must enter a city first!
                 </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={handleClose}>Close</Button>
-            </Modal.Footer>
-            </Modal>
-        );
-    // }
-    // return null;
+                <hr />
+                <div className="d-flex justify-content-end">
+                    <Button onClick={handleClose} variant="outline-success">
+                        Close 
+                    </Button>
+                </div>
+            </Alert>
+        )
+    }
+    return null;
 }

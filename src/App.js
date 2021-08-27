@@ -60,6 +60,8 @@ function App() {
     setCity(elemRef.current["cityName"].value);
     setCountry(elemRef.current["countryName"].value);
 
+    console.log("city: ", city);
+    console.log("country: ", city);
     if(city === "") {
       //show the alert
       setShowAlert(!showAlert);
@@ -95,11 +97,11 @@ function App() {
           //pass the ref down so we can access the field in the form
           ref={ elemRef }
         />
-        {/* <Collapse in={ showAlert } > */}
-          {/* <div id="alert"> */}
+        <Collapse in={ showAlert } >
+          <div id="alert">
             <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }/>
-          {/* </div> */}
-        {/* </Collapse> */}
+          </div>
+        </Collapse>
         <Collapse in={ openWeather }>
           <div id="weather">
             <Weather data={ weather } city={city} unit={unit}/>
