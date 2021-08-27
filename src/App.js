@@ -81,15 +81,6 @@ function App() {
     setShowAlert(!showAlert);
   }
 
-  const weatherData = useMemo(() => {
-    if (weather) {
-      return {
-
-      }
-    }
-    return {};
-  }, [weather])
-
   console.log("weather: " , weather);
 
   return (
