@@ -2,7 +2,6 @@ import { Alert, Button } from 'react-bootstrap';
 import React from 'react';
 
 export default function ErrorInfo({ showAlert, handleClose }) {
-    console.log(showAlert)
     if (showAlert) {
         return (
             <Alert variant="danger">

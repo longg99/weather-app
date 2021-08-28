@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Container, Button, Collapse, Fade } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeatherData, getWeatherDataByCity } from "./Components/apis";
-import { CitySearch } from "./Components/CitySearch";
+import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
 import ErrorInfo from "./Components/ErrorInfo";
 
@@ -16,9 +16,11 @@ function App() {
   const [openWeather, setOpenWeather] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   //state for the error we catch
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
   //unit, metric by default
   const [unit, setUnit] = useState("metric");
+  //change the submit btn text
+  const [submitText, setSubmitText] = useState("Show me the weather");
 
   //useRef to get the current elem (obj)
   //use ref forwarding
@@ -36,17 +38,42 @@ function App() {
       if (country === "") {
         //call the api and get the current weather
         getWeatherDataByCity(city, unit).then((res) => {
+          console.log("calling the api");
           setWeather(res.data);
+          //reset the error
+          setError({})
+        })
+        //catch error
+        .catch(function (error) {
+          //if we got error
+          if (error.response) {
+            console.log(error.response.data);
+            //set the error data and code
+            setError(error.response.data);
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else if (error.response.status === 401) {
+            //catch the 401
+            setError({cod: 401});
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+          }
+          console.log(error.config);
         });
       }
       else {
         //call the api using city and country
         getWeatherData(city, country, unit).then((res) => {
+          console.log("calling the api");
           setWeather(res.data);
         });
       }
     }
   }, [city, country, unit])
+
+  console.log("error: " + error.cod)
 
   //display the part of day according to the current time
   let partOfDay;
@@ -56,30 +83,51 @@ function App() {
 
   //handle the search btn on click
   const handleSearchOnClick = () => {
-    //first set the city (and country)
-    setCity(elemRef.current["cityName"].value);
-    setCountry(elemRef.current["countryName"].value);
-
-    console.log("city: ", city);
-    console.log("country: ", city);
-    if(city === "") {
-      //show the alert
-      setShowAlert(!showAlert);
-      //for debugging only
-      // setOpenWeather(!openWeather);
+    //change to hide/show
+    if (submitText === "Hide") {
+      setSubmitText("Show me the weather");
     }
-    else {  
+    else {
+      setSubmitText("Hide");
+    }
+    //check if we have an error
+    if(error && Object.keys(error).length === 0 && error.constructor === Object 
+      && city !== "") {
       //else show the weather based on the city passed
       //based on the value of the input field
       setShowAlert(false);
       setOpenWeather(!openWeather);
     }
+    else {  
+      //else
+      //show the alert
+      setShowAlert(!showAlert);
+      //for debugging only
+      // setOpenWeather(!openWeather);
+    }
   }
 
-  console.log("city " + city + " country " + country)
+  //handle city change
+  const handleCityChange = (newCity) => {
+    //set the new country
+    setCity(newCity);
+  }
+
+  //handle country change
+  const handleCountryChange = (newCountry) => {
+    //set the new country
+    setCountry(newCountry);
+  }
 
   //close alert
   const handleClose = () => {
+    //change the submit btn text
+    if (submitText === "Hide") {
+      setSubmitText("Show me the weather");
+    }
+    else {
+      setSubmitText("Hide");
+    }
     setShowAlert(!showAlert);
   }
 
@@ -91,20 +139,23 @@ function App() {
        flex-column vh-100">
         <p className="display-5 text-center">
           Good { partOfDay }! Welcome to my weather app.</p>
-        <CitySearch city={city} 
+        <CitySearch 
           //pass this function down
           handleSearchOnClick={ handleSearchOnClick }
+          handleCityChange = { handleCityChange }
+          handleCountryChange = { handleCountryChange }
           //pass the ref down so we can access the field in the form
-          ref={ elemRef }
+          submitText={ submitText }
         />
         <Collapse in={ showAlert } >
           <div id="alert">
-            <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }/>
+            <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }
+              error = { error }/>
           </div>
         </Collapse>
         <Collapse in={ openWeather }>
           <div id="weather">
-            <Weather data={ weather } city={city} unit={unit}/>
+            <Weather data={ weather } unit={unit}/>
           </div>
         </Collapse>
       </div>

@@ -11,3 +11,4 @@ export const getWeatherDataByCity = (city, unit) =>
     Axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}
     &units=${unit}&&appid=690a99e3fce9056aa266481b4f8e7946`);
 
+
