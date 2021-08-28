@@ -5,6 +5,7 @@ import { getWeatherData, getWeatherDataByCity } from "./Components/apis";
 import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
 import ErrorInfo from "./Components/ErrorInfo";
+import axios from "axios";
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
   const [openWeather, setOpenWeather] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   //state for the error we catch
-  const [error, setError] = useState({});
+  const [error, setError] = useState("");
   //unit, metric by default
   const [unit, setUnit] = useState("metric");
   //change the submit btn text
@@ -45,22 +46,20 @@ function App() {
         })
         //catch error
         .catch(function (error) {
-          //if we got error
+          //if we got error and respond
           if (error.response) {
-            console.log(error.response.data);
-            //set the error data and code
-            setError(error.response.data);
+            //set the error message accordingly
+            if (error.response.data.cod == 404) {
+              setError("Please enter a valid city/country!");
+            }
+            else if (error.response.data.cod == 429) {
+              setError("Sorry! The number of calls exceeded the server's allowance." +
+              " Please try again in a few minutes...");
+            }
           } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-          } else if (error.response.status === 401) {
-            //catch the 401
-            setError({cod: 401});
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-          }
-          console.log(error.config);
+              setError("Sorry! We are not receiving any request from the server." +
+              " Please try again in a few minutes...");
+          } 
         });
       }
       else {
@@ -68,12 +67,42 @@ function App() {
         getWeatherData(city, country, unit).then((res) => {
           console.log("calling the api");
           setWeather(res.data);
+        })
+        //catch error
+        .catch(function (error) {
+          //if we got error
+          if (error.response) {
+            //set the error message accordingly
+            if (error.response.data.cod == 404) {
+              setError("Please enter a valid city/country!");
+            }
+            else if (error.response.data.cod == 429) {
+              setError("Sorry! The number of calls exceeded the server's allowance." +
+              " Please try again in a few minutes...");
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+          } else if (error.request) {
+              setError("Sorry! We are not receiving any request from the server." +
+              " Please try again in a few minutes...");
+          }
         });
-      }
+      };
     }
   }, [city, country, unit])
 
-  console.log("error: " + error.cod)
+  //handle the 401 since we cannot catch using the .catch
+  //using a 401 response interceptor
+  axios.interceptors.response.use(response => {
+    return response;
+  }, function (error) {
+    if (401 === error.response.status) {
+        setError("Please enter a valid city/country!");
+    } else {
+        return Promise.reject(error);
+    }
+  });
 
   //display the part of day according to the current time
   let partOfDay;
@@ -91,19 +120,19 @@ function App() {
       setSubmitText("Hide");
     }
     //check if we have an error
-    if(error && Object.keys(error).length === 0 && error.constructor === Object 
-      && city !== "") {
-      //else show the weather based on the city passed
+    if(error && Object.keys(error).length === 0 && error.constructor === Object && 
+      city !== "") {
+      //show the weather based on the city passed
       //based on the value of the input field
       setShowAlert(false);
       setOpenWeather(!openWeather);
     }
     else {  
       //else
+      //set the error
+      if (city === "") setError("You must enter a city first!");
       //show the alert
       setShowAlert(!showAlert);
-      //for debugging only
-      // setOpenWeather(!openWeather);
     }
   }
 

@@ -1,13 +1,13 @@
 import { Alert, Button } from 'react-bootstrap';
 import React from 'react';
 
-export default function ErrorInfo({ showAlert, handleClose }) {
+export default function ErrorInfo({ showAlert, handleClose, error }) {
     if (showAlert) {
         return (
             <Alert variant="danger">
                 <Alert.Heading>Error</Alert.Heading>
                 <p>
-                    You must enter a city first!
+                    {error}
                 </p>
                 <hr />
                 <div className="d-flex justify-content-end">

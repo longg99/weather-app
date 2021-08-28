@@ -54,7 +54,7 @@ export default function Weather({ data, unit }) {
                 </p>
             </div>
             <p className="text-center fs-5">
-                {capitalizeFirstLetter(weather.description)} is forecasted for now. 
+                {capitalizeFirstLetter(weather.description)} condition is forecasted for now. 
             </p>
             <div className="d-flex flex-column align-items-left 
                     justify-content-left">

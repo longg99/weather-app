@@ -12,3 +12,4 @@ export const getWeatherDataByCity = (city, unit) =>
     &units=${unit}&&appid=690a99e3fce9056aa266481b4f8e7946`);
 
 
+
