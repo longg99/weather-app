@@ -5,9 +5,9 @@ export default function ErrorInfo({ showAlert, handleClose, error }) {
     if (showAlert) {
         return (
             <Alert variant="danger">
-                <Alert.Heading>Error</Alert.Heading>
+                <Alert.Heading>Error!</Alert.Heading>
                 <p>
-                    {error}
+                    { error }
                 </p>
                 <hr />
                 <div className="d-flex justify-content-end">

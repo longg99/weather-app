@@ -22,37 +22,33 @@ function App() {
   const [unit, setUnit] = useState("metric");
   //change the submit btn text
   const [submitText, setSubmitText] = useState("Show me the weather");
-
-  //useRef to get the current elem (obj)
-  //use ref forwarding
-  const elemRef = useRef({});
   
   useEffect(() => {
     //get the current time
     setTime(new Date().getHours());
   }, [time])
 
-  //this effect will be used every time the city or country changes
-  useEffect(() =>{
+  //this effect will be used every time the city or country or unit changes
+  useEffect(() => {
     //only call the api when the user enter a city
     if (city !== "") {
       if (country === "") {
         //call the api and get the current weather
         getWeatherDataByCity(city, unit).then((res) => {
-          console.log("calling the api");
+          console.log("calling the api with only city");
           setWeather(res.data);
           //reset the error
-          setError({})
+          setError("");
         })
         //catch error
         .catch(function (error) {
           //if we got error and respond
           if (error.response) {
             //set the error message accordingly
-            if (error.response.data.cod == 404) {
+            if (error.response.data.cod === "404") {
               setError("Please enter a valid city/country!");
             }
-            else if (error.response.data.cod == 429) {
+            else if (error.response.data.cod === "429") {
               setError("Sorry! The number of calls exceeded the server's allowance." +
               " Please try again in a few minutes...");
             }
@@ -65,18 +61,20 @@ function App() {
       else {
         //call the api using city and country
         getWeatherData(city, country, unit).then((res) => {
-          console.log("calling the api");
+          console.log("calling the api with city and country");
           setWeather(res.data);
+          //reset the error
+          setError("");
         })
         //catch error
         .catch(function (error) {
           //if we got error
           if (error.response) {
             //set the error message accordingly
-            if (error.response.data.cod == 404) {
+            if (error.response.data.cod === "404") {
               setError("Please enter a valid city/country!");
             }
-            else if (error.response.data.cod == 429) {
+            else if (error.response.data.cod === "429") {
               setError("Sorry! The number of calls exceeded the server's allowance." +
               " Please try again in a few minutes...");
             }
@@ -97,8 +95,8 @@ function App() {
   axios.interceptors.response.use(response => {
     return response;
   }, function (error) {
-    if (401 === error.response.status) {
-        setError("Please enter a valid city/country!");
+    if ("401" === error.response.status) {
+        setError("Sorry! API key error. Please try again later.");
     } else {
         return Promise.reject(error);
     }
@@ -120,8 +118,7 @@ function App() {
       setSubmitText("Hide");
     }
     //check if we have an error
-    if(error && Object.keys(error).length === 0 && error.constructor === Object && 
-      city !== "") {
+    if(error === "" && city !== "") {
       //show the weather based on the city passed
       //based on the value of the input field
       setShowAlert(false);
@@ -160,7 +157,14 @@ function App() {
     setShowAlert(!showAlert);
   }
 
+  const handleUnitOnChange = (e) => {
+    setUnit(e.target.value);
+  }
+
+  //for debugging
   console.log("weather: " , weather);
+  console.log("unit: ", unit);
+  console.log("error", error);
 
   return (
     <Container fluid>
@@ -169,12 +173,13 @@ function App() {
         <p className="display-5 text-center">
           Good { partOfDay }! Welcome to my weather app.</p>
         <CitySearch 
-          //pass this function down
+          //pass these functions and props down
           handleSearchOnClick={ handleSearchOnClick }
           handleCityChange = { handleCityChange }
           handleCountryChange = { handleCountryChange }
-          //pass the ref down so we can access the field in the form
+          handleUnitOnChange = { handleUnitOnChange }
           submitText={ submitText }
+          unit = { unit }
         />
         <Collapse in={ showAlert } >
           <div id="alert">

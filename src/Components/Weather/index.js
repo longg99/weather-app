@@ -4,7 +4,6 @@ import Moment from "react-moment";
 import 'moment-timezone';
 
 export default function Weather({ data, unit }) {
-    console.log(data);
     if (data && Object.keys(data).length === 0 && data.constructor === Object) {
         return null;
     }
@@ -42,7 +41,7 @@ export default function Weather({ data, unit }) {
         <Container fluid className="justify-content-center border">
             <p className="lead mb-0 text-center" style={{ fontSize: "2vh" }}>
                 This is the current weather of {cityName}, {countryData.country} as of&nbsp;
-                <Moment unix format="LLL" tz="UTC">{today}</Moment> (local time)
+                <Moment unix format="LLL" tz="UTC">{today}</Moment> (local time):
 
             </p>
             <div className="d-flex flex-row align-items-center 

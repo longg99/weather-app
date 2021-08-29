@@ -3,7 +3,7 @@ import { Container, Button, Alert, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function CitySearch ( {handleSearchOnClick, handleCityChange,
-    handleCountryChange, submitText }){
+    handleCountryChange, handleUnitOnChange, submitText, unit }){
     //state to only trigger the onChanges when user stopped typing
     const [city, setCity] = useState("");
     const [country, setCountry] = useState("");
@@ -35,13 +35,37 @@ export default function CitySearch ( {handleSearchOnClick, handleCityChange,
             </div>
             <div>
                 <Form.Group>
-                    <Form.Label aria-required>Enter your country name (optional): </Form.Label>
-                    <Form.Control type="text" placeholder="Country..." 
+                    <Form.Label aria-required>Enter your country code (optional): </Form.Label>
+                    <Form.Control type="text" placeholder="Country code..." 
                         onChange={(e) => setCountry(e.target.value)}
                     />
                     <small className="form-text text-muted">
-                        For a more precise result, please specify the country.    
+                        For a more precise result, please specify the country code.   
+                        Refer to this <a href="https://www.iso.org/obp/ui/#home">link</a> 
+                        &nbsp;for the country codes.
                     </small>
+                </Form.Group>
+            </div>
+            <div className="mt-2">
+                <Form.Group className="d-flex justify-content-center">
+                    <Form.Check
+                    name="unitRadio"
+                    inline
+                    label="Metric"
+                    type="radio"
+                    onChange={handleUnitOnChange}
+                    value="metric"
+                    checked={ unit === "metric" }
+                    />
+                    <Form.Check
+                    inline
+                    label="Imperial"
+                    name="unitRadio"
+                    onChange={handleUnitOnChange}
+                    type="radio"
+                    value="imperial"
+                    checked={ unit === "imperial" }
+                    />
                 </Form.Group>
             </div>
             <div className="d-flex justify-content-center">
