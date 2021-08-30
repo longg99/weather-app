@@ -1,9 +1,9 @@
 import React from 'react'
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import Moment from "react-moment";
 import 'moment-timezone';
 
-export default function Weather({ data, unit }) {
+export default function Weather({ data, unit, handleRefresh }) {
     if (data && Object.keys(data).length === 0 && data.constructor === Object) {
         return null;
     }
@@ -92,6 +92,14 @@ export default function Weather({ data, unit }) {
                     <span className="text-muted">Sunset: </span>
                     <span><Moment unix format="LT" tz="UTC">{sunset}</Moment></span>
                 </div>
+            </div>
+            <div className="d-flex flex-row align-items-center 
+                    justify-content-center">
+                <Button style={{marginTop: 10}}  
+                    className="mb-2" onClick={ handleRefresh }
+                >
+                Refresh
+                </Button>
             </div>
         </Container>
     )

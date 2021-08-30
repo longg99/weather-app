@@ -20,8 +20,6 @@ function App() {
   const [error, setError] = useState("");
   //unit, metric by default
   const [unit, setUnit] = useState("metric");
-  //change the submit btn text
-  const [submitText, setSubmitText] = useState("Show me the weather");
   
   useEffect(() => {
     //get the current time
@@ -90,6 +88,19 @@ function App() {
     }
   }, [city, country, unit])
 
+  //this effect will update page base onthe error and hide/show the weather section
+  useEffect(() => {
+    if (error !== "") {
+      setShowAlert(true);
+      setOpenWeather(false);
+    }
+    else {
+      setShowAlert(false);
+      //if we have city only show the weather
+      if (city !== "") setOpenWeather(true);
+    }
+  }, [error])
+
   //handle the 401 since we cannot catch using the .catch
   //using a 401 response interceptor
   axios.interceptors.response.use(response => {
@@ -110,13 +121,6 @@ function App() {
 
   //handle the search btn on click
   const handleSearchOnClick = () => {
-    //change to hide/show
-    if (submitText === "Hide") {
-      setSubmitText("Show me the weather");
-    }
-    else {
-      setSubmitText("Hide");
-    }
     //check if we have an error
     if(error === "" && city !== "") {
       //show the weather based on the city passed
@@ -147,13 +151,6 @@ function App() {
 
   //close alert
   const handleClose = () => {
-    //change the submit btn text
-    if (submitText === "Hide") {
-      setSubmitText("Show me the weather");
-    }
-    else {
-      setSubmitText("Hide");
-    }
     setShowAlert(!showAlert);
   }
 
@@ -167,9 +164,9 @@ function App() {
   console.log("error", error);
 
   return (
-    <Container fluid>
+    <Container fluid className="h-100">
       <div className="d-flex justify-content-center align-items-center
-       flex-column vh-100">
+       flex-column h-100">
         <p className="display-5 text-center">
           Good { partOfDay }! Welcome to my weather app.</p>
         <CitySearch 
@@ -178,17 +175,18 @@ function App() {
           handleCityChange = { handleCityChange }
           handleCountryChange = { handleCountryChange }
           handleUnitOnChange = { handleUnitOnChange }
-          submitText={ submitText }
+          openWeather={ openWeather }
+          showAlert={ showAlert }
           unit = { unit }
         />
-        <Collapse in={ showAlert } >
+        <Fade in={ showAlert } >
           <div id="alert">
             <ErrorInfo showAlert={ showAlert } handleClose={ handleClose }
               error = { error }/>
           </div>
-        </Collapse>
+        </Fade>
         <Collapse in={ openWeather }>
-          <div id="weather">
+          <div id="weather" className="overflow-auto">
             <Weather data={ weather } unit={unit}/>
           </div>
         </Collapse>
