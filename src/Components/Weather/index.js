@@ -38,7 +38,7 @@ export default function Weather({ data, unit, handleRefresh }) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
     return (
-        <Container fluid className="justify-content-center border">
+        <Container fluid className="justify-content-center border bg-light">
             <p className="lead mb-0 text-center" style={{ fontSize: "2vh" }}>
                 This is the current weather of {cityName}, {countryData.country} as of&nbsp;
                 <Moment unix format="LLL" tz="UTC">{today}</Moment> (local time):

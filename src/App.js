@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Container, Button, Collapse, Fade } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Collapse, Fade } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeatherData, getWeatherDataByCity } from "./Components/apis";
 import CitySearch from "./Components/CitySearch";
@@ -20,6 +20,8 @@ function App() {
   const [error, setError] = useState("");
   //unit, metric by default
   const [unit, setUnit] = useState("metric");
+  //refresh the weather
+  const [refresh, setRefresh] = useState(false);
   
   useEffect(() => {
     //get the current time
@@ -29,13 +31,13 @@ function App() {
   //this effect will be used every time the city or country or unit changes
   useEffect(() => {
     //only call the api when the user enter a city
-    if (city !== "") {
+    if (city !== "" || refresh) {
       if (country === "") {
         //call the api and get the current weather
         getWeatherDataByCity(city, unit).then((res) => {
           console.log("calling the api with only city");
           setWeather(res.data);
-          //reset the error
+          //reset the error 
           setError("");
         })
         //catch error
@@ -86,7 +88,8 @@ function App() {
         });
       };
     }
-  }, [city, country, unit])
+    return () => setRefresh(false);
+  }, [city, country, unit, refresh])
 
   //this effect will update page base onthe error and hide/show the weather section
   useEffect(() => {
@@ -99,7 +102,7 @@ function App() {
       //if we have city only show the weather
       if (city !== "") setOpenWeather(true);
     }
-  }, [error])
+  }, [error, city])
 
   //handle the 401 since we cannot catch using the .catch
   //using a 401 response interceptor
@@ -158,10 +161,18 @@ function App() {
     setUnit(e.target.value);
   }
 
-  //for debugging
+  //handle the refresh btn
+  const handleRefresh = () => {
+    //set the state to call the api
+    setRefresh(true);
+    console.log("refreshing the data");
+  }
+
+  //for debugging only
   console.log("weather: " , weather);
   console.log("unit: ", unit);
   console.log("error", error);
+  console.log("refresh", refresh);//
 
   return (
     <Container fluid className="h-100">
@@ -187,9 +198,11 @@ function App() {
         </Fade>
         <Collapse in={ openWeather }>
           <div id="weather" className="overflow-auto">
-            <Weather data={ weather } unit={unit}/>
+            <Weather data={ weather } unit={unit}
+            handleRefresh = { handleRefresh }
+            />
           </div>
-        </Collapse>
+        </Collapse>        
       </div>
     </Container>
   )

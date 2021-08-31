@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, Alert, Form } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function CitySearch ( {handleSearchOnClick, handleCityChange,
@@ -53,7 +53,7 @@ export default function CitySearch ( {handleSearchOnClick, handleCityChange,
                     <small className="form-text text-muted">
                         For a more precise result, please specify the country code.   
                         Refer to this <a href="https://www.iso.org/obp/ui/#home"
-                        target="_blank">link</a> 
+                        target="_blank" rel="noreferrer">link</a> 
                         &nbsp;for the country codes.
                     </small>
                 </Form.Group>
