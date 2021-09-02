@@ -175,7 +175,6 @@ function App() {
   console.log("refresh", refresh);//
 
   return (
-    <Container fluid className="h-100">
       <div className="d-flex justify-content-center align-items-center
        flex-column h-100">
         <p className="display-5 text-center">
@@ -204,7 +203,6 @@ function App() {
           </div>
         </Collapse>        
       </div>
-    </Container>
   )
 }
 
