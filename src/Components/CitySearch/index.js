@@ -22,7 +22,7 @@ export default function CitySearch ( {handleSearchOnClick, handleCityChange,
         const timeOut = setTimeout(() => {
             handleCityChange(city);
             handleCountryChange(country);
-        }, 1000)
+        }, 850)
         //clear the timeout when done
         return () => {
             clearTimeout(timeOut);
