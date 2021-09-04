@@ -4,6 +4,11 @@ import Moment from "react-moment";
 import "moment-timezone";
 
 export default function CurrentWeather({ data, unit }) {
+  //return null if no data
+  if (data && Object.keys(data).length === 0 && data.constructor === Object) {
+    return null;
+  }
+
   //get the weather description and icon
   const weather = data.weather[0];
   //get the main weather from the data we passed

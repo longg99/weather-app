@@ -3,6 +3,11 @@ import Moment from "react-moment";
 import "moment-timezone";
 
 export default function FiveDaysWeather({ data, unit }) {
+  //return null if no data
+  if (data && Object.keys(data).length === 0 && data.constructor === Object) {
+    return null;
+  }
+
   const weather = data.list;
   console.log("weather: ", weather);
   //get the city
