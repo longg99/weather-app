@@ -65,64 +65,63 @@ export default function CurrentWeather({ data, unit }) {
         {capitalizeFirstLetter(weather.description)} condition is forecasted for
         now.
       </p>
-      <div
-        className="d-flex flex-column align-items-left 
-                    justify-content-left"
-      >
-        <p className="lead text-uppercase fst-italic">
-          Detailed weather report:{" "}
-        </p>
-        <div id="weatherInfo">
-          <span className="text-muted">High: </span>
-          <span>
-            {Math.round(mainWeather.temp_max)}°{displayTemp}.
-          </span>
-          <br />
-          <span className="text-muted">Low: </span>
-          <span>
-            {Math.round(mainWeather.temp_min)}°{displayTemp}.
-          </span>
-          <br />
-          <span className="text-muted">Feels like: </span>
-          <span>
-            {Math.round(mainWeather.feels_like)}°{displayTemp}.
-          </span>
-          <br />
-          <span className="text-muted">Humidity: </span>
-          <span>{Math.round(mainWeather.humidity)}%.</span>
-          <br />
-          <span className="text-muted">Atmospheric pressure: </span>
-          <span>{Math.round(mainWeather.pressure)} hPa.</span>
-          <hr />
-          <span className="text-muted">Wind speed: </span>
-          <span>
-            {wind.speed} {displaySpeed}.
-          </span>
-          <br />
-          <span className="text-muted">Wind gust: </span>
-          <span>
-            {wind.gust} {displaySpeed}.
-          </span>
-          <hr />
-          <span className="text-muted">Cloudiness: </span>
-          <span>{data.clouds.all}%.</span>
-          <br />
-          <span className="text-muted">Visibility: </span>
-          <span>{data.visibility / 1000} km</span>
-          <hr />
-          <span className="text-muted">Sunrise: </span>
-          <span>
-            <Moment unix format="LT" tz="UTC">
-              {sunrise}
-            </Moment>
-          </span>
-          <br />
-          <span className="text-muted">Sunset: </span>
-          <span>
-            <Moment unix format="LT" tz="UTC">
-              {sunset}
-            </Moment>
-          </span>
+      <div className="card d-flex justify-content-center">
+        <div className="card-header">
+          <span className="lead">Detailed weather report:</span>
+        </div>
+        <div className="card-body">
+          <div id="weatherInfo">
+            <span className="text-muted">High: </span>
+            <span>
+              {Math.round(mainWeather.temp_max)}°{displayTemp}.
+            </span>
+            <br />
+            <span className="text-muted">Low: </span>
+            <span>
+              {Math.round(mainWeather.temp_min)}°{displayTemp}.
+            </span>
+            <br />
+            <span className="text-muted">Feels like: </span>
+            <span>
+              {Math.round(mainWeather.feels_like)}°{displayTemp}.
+            </span>
+            <br />
+            <span className="text-muted">Humidity: </span>
+            <span>{Math.round(mainWeather.humidity)}%.</span>
+            <br />
+            <span className="text-muted">Atmospheric pressure: </span>
+            <span>{Math.round(mainWeather.pressure)} hPa.</span>
+            <hr />
+            <span className="text-muted">Wind speed: </span>
+            <span>
+              {wind.speed} {displaySpeed}.
+            </span>
+            <br />
+            <span className="text-muted">Wind gust: </span>
+            <span>
+              {wind.gust} {displaySpeed}.
+            </span>
+            <hr />
+            <span className="text-muted">Cloudiness: </span>
+            <span>{data.clouds.all}%.</span>
+            <br />
+            <span className="text-muted">Visibility: </span>
+            <span>{data.visibility / 1000} km</span>
+            <hr />
+            <span className="text-muted">Sunrise: </span>
+            <span>
+              <Moment unix format="LT" tz="UTC">
+                {sunrise}
+              </Moment>
+            </span>
+            <br />
+            <span className="text-muted">Sunset: </span>
+            <span>
+              <Moment unix format="LT" tz="UTC">
+                {sunset}
+              </Moment>
+            </span>
+          </div>
         </div>
       </div>
     </div>
