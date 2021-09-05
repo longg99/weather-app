@@ -66,7 +66,7 @@ export default function Weather({
               handleChangeReport("five days");
             }}
           >
-            Five days Forecast
+            3-hour/5-day Forecast
           </ListGroup.Item>
         </ul>
         {/* path to different components */}

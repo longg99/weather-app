@@ -2,6 +2,14 @@ import React from "react";
 import Moment from "react-moment";
 import "moment-timezone";
 import moment from "moment";
+import {
+  LineChart,
+  Line,
+  ResponsiveContainer,
+  XAxis,
+  Tooltip,
+  YAxis,
+} from "recharts";
 
 export default function FiveDaysWeather({ data, unit }) {
   //return null if no data
@@ -50,23 +58,39 @@ export default function FiveDaysWeather({ data, unit }) {
       todayForecast.push(weatherData);
   }
 
-  console.log(
-    moment
-      .unix(weather[0].dt + timeZone)
-      .utc()
-      .format("YYYY-MM-DD HH:mm:ss")
-  );
-  console.log(moment.unix(weather[1].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
-  console.log(moment.unix(weather[2].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
-  console.log(moment.unix(weather[3].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
-  console.log(moment.utc().format("YYYY-MM-DD HH:mm:ss"));
-  console.log(
-    "local time to UTC: " +
-      moment.unix(today).utc().format("YYYY-MM-DD HH:mm:ss")
-  );
-  console.log("unix to utc: ", moment().unix());
-  console.log("date test: ", moment.unix(1630908000).format("YYYY-MM-DD"));
-  console.log("forecast: ", todayForecast);
+  //add to the chart
+  let todayForecastChart = [];
+  for (const entry of todayForecast) {
+    //new obj storing less items
+    const entryChart = {
+      temp: entry.main.temp,
+      feels_like: entry.main.feels_like,
+      time: moment
+        .unix(entry.dt + timeZone)
+        .utc()
+        .format("HH:mm"),
+    };
+    //push to the array
+    todayForecastChart.push(entryChart);
+  }
+
+  // console.log(
+  //   moment
+  //     .unix(weather[0].dt + timeZone)
+  //     .utc()
+  //     .format("YYYY-MM-DD HH:mm:ss")
+  // );
+  // console.log(moment.unix(weather[1].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
+  // console.log(moment.unix(weather[2].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
+  // console.log(moment.unix(weather[3].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
+  // console.log(moment.utc().format("YYYY-MM-DD HH:mm:ss"));
+  // console.log(
+  //   "local time to UTC: " +
+  //     moment.unix(today).utc().format("YYYY-MM-DD HH:mm:ss")
+  // );
+  // console.log("unix to utc: ", moment().unix());
+  // console.log("date test: ", moment.unix(1630908000).format("YYYY-MM-DD"));
+  // console.log("forecast: ", todayForecast);
 
   return (
     <div>
@@ -81,6 +105,20 @@ export default function FiveDaysWeather({ data, unit }) {
       <div className="card">
         <div className="card-header lead">3-hour forecast for today:</div>
         <div className="card-body d-flex flex-column overflow-auto ">
+          <ResponsiveContainer width="98%" height={300}>
+            <LineChart data={todayForecastChart}>
+              <Line
+                type="monotone"
+                dataKey="temp"
+                stroke="#8884d8"
+                name="Temperature"
+                des
+              />
+              <XAxis dataKey="time" />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+
           {/* map each weather to one entry */}
           {todayForecast.map((data) => (
             <div
@@ -107,6 +145,12 @@ export default function FiveDaysWeather({ data, unit }) {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* for 5 days forecast */}
+      <div className="card mt-3">
+        <div className="card-header lead">Next 5 days forecast:</div>
+        <div className="card-body d-flex flex-column overflow-auto "></div>
       </div>
     </div>
   );
