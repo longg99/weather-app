@@ -259,14 +259,6 @@ function App() {
     setReport(val);
   };
 
-  //for debugging only
-  console.log("weather: ", weather);
-  console.log("unit: ", unit);
-  console.log("error", error);
-  console.log("refresh", refresh);
-  console.log("report: ", report);
-  console.log("forecast: ", forecast);
-
   return (
     <div
       className="d-flex justify-content-center align-items-center

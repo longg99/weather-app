@@ -20,7 +20,6 @@ export default function FiveDaysWeather({ data, unit }) {
   }
 
   const weather = data.list;
-  console.log("weather data of forecast: ", weather);
   //get the city
   const cityName = data.city.name;
   //get the data about the country
@@ -125,9 +124,6 @@ export default function FiveDaysWeather({ data, unit }) {
     //add to the array
     fiveDaysForecast.push(dailyForecast);
   });
-
-  console.log(fiveDaysForecast3hrs);
-  console.log("daily forecast: ", fiveDaysForecast);
 
   return (
     <div>
