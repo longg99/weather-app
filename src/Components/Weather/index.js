@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, ListGroup } from "react-bootstrap";
 import "moment-timezone";
-import { Route, Switch, BrowserRouter, Link, Redirect } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  BrowserRouter,
+  Link,
+  Redirect,
+  HashRouter,
+} from "react-router-dom";
 import CurrentWeather from "./CurrentWeather";
 import FiveDaysWeather from "./FiveDaysWeather";
 
@@ -42,7 +49,7 @@ export default function Weather({
   return (
     <Container fluid className="justify-content-center border bg-light">
       {/* use a router to get different component */}
-      <BrowserRouter>
+      <HashRouter>
         <ul className="row p-0">
           <ListGroup.Item
             as={Link}
@@ -88,7 +95,7 @@ export default function Weather({
         </Switch>
         {/* automatically redirect to the current weather */}
         <Redirect exact from="/" to="/currentweather" />
-      </BrowserRouter>
+      </HashRouter>
       <div
         className="d-flex flex-row align-items-center 
                     justify-content-center"

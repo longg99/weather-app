@@ -11,7 +11,7 @@ import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
 import ErrorInfo from "./Components/ErrorInfo";
 import axios from "axios";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import backgroundImg from "./img/background-img.jpg";
 
 function App() {
@@ -262,7 +262,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter basename="/weather">
+    <HashRouter basename="/">
       <div
         className="d-flex justify-content-center align-items-center
        flex-column h-100"
@@ -307,7 +307,7 @@ function App() {
           </div>
         </Collapse>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
