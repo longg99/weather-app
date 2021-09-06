@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Collapse, Fade } from "react-bootstrap";
+import { Collapse, Fade } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   getWeatherData,

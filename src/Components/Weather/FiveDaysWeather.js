@@ -9,7 +9,9 @@ import {
   XAxis,
   Tooltip,
   YAxis,
+  Text,
 } from "recharts";
+import _ from "lodash";
 
 export default function FiveDaysWeather({ data, unit }) {
   //return null if no data
@@ -50,10 +52,21 @@ export default function FiveDaysWeather({ data, unit }) {
     if (
       //convert to local time time (in const today) and compare
       //if we have the same data then it's the today's weather
+      //and the next day weather till the current time
+      //today + 86400 means the next day (24 hours == 86400 sec)
       moment
         .unix(timeUTC + timeZone)
         .utc()
-        .format("YYYY-MM-DD") === moment.unix(today).utc().format("YYYY-MM-DD")
+        .format("YYYY-MM-DD") ===
+        moment.unix(today).utc().format("YYYY-MM-DD") ||
+      moment
+        .unix(timeUTC + timeZone)
+        .utc()
+        .format("YYYY-MM-DD") ===
+        moment
+          .unix(today + 86400)
+          .utc()
+          .format("YYYY-MM-DD")
     )
       todayForecast.push(weatherData);
   }
@@ -74,23 +87,47 @@ export default function FiveDaysWeather({ data, unit }) {
     todayForecastChart.push(entryChart);
   }
 
-  // console.log(
-  //   moment
-  //     .unix(weather[0].dt + timeZone)
-  //     .utc()
-  //     .format("YYYY-MM-DD HH:mm:ss")
-  // );
-  // console.log(moment.unix(weather[1].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
-  // console.log(moment.unix(weather[2].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
-  // console.log(moment.unix(weather[3].dt).utc().format("YYYY-MM-DD HH:mm:ss"));
-  // console.log(moment.utc().format("YYYY-MM-DD HH:mm:ss"));
-  // console.log(
-  //   "local time to UTC: " +
-  //     moment.unix(today).utc().format("YYYY-MM-DD HH:mm:ss")
-  // );
-  // console.log("unix to utc: ", moment().unix());
-  // console.log("date test: ", moment.unix(1630908000).format("YYYY-MM-DD"));
-  // console.log("forecast: ", todayForecast);
+  //use lodash groupBy function to extract each date from the data
+  const fiveDaysForecast3hrs = _.groupBy(weather, (entry) =>
+    moment
+      .unix(entry.dt + timeZone)
+      .utc()
+      .format("ddd")
+  );
+
+  //convert to key's (date) array
+  const keys = Object.keys(fiveDaysForecast3hrs);
+
+  //remove the first date (today's date)
+  keys.shift();
+
+  let fiveDaysForecast = [];
+
+  keys.forEach((key, index) => {
+    //loop thru the weather by hours and get the avg high and low
+    let high = Number.MIN_VALUE;
+    let low = Number.MAX_VALUE;
+    //continue to loop thru the obj array
+    fiveDaysForecast3hrs[key].forEach((entry, index) => {
+      //find the high and low
+      high = Math.max(entry.main.temp_max, high);
+      low = Math.min(entry.main.temp_min, low);
+    });
+    //round the number
+    high = Math.round(high);
+    low = Math.round(low);
+    //construct an obj containing the daily forecast
+    const dailyForecast = {
+      date: key,
+      high: high,
+      low: low,
+    };
+    //add to the array
+    fiveDaysForecast.push(dailyForecast);
+  });
+
+  console.log(fiveDaysForecast3hrs);
+  console.log("daily forecast: ", fiveDaysForecast);
 
   return (
     <div>
@@ -103,7 +140,7 @@ export default function FiveDaysWeather({ data, unit }) {
         (local time):
       </p>
       <div className="card">
-        <div className="card-header lead">3-hour forecast for today:</div>
+        <div className="card-header lead">3-hour forecast:</div>
         <div className="card-body d-flex flex-column overflow-auto ">
           <ResponsiveContainer width="98%" height={300}>
             <LineChart data={todayForecastChart}>
@@ -115,6 +152,23 @@ export default function FiveDaysWeather({ data, unit }) {
                 des
               />
               <XAxis dataKey="time" />
+              <YAxis
+                width={40}
+                label={() => {
+                  return (
+                    <Text
+                      x={-35}
+                      y={30}
+                      dx={50}
+                      dy={150}
+                      offset={0}
+                      angle={-90}
+                    >
+                      Temperature
+                    </Text>
+                  );
+                }}
+              />
               <Tooltip />
             </LineChart>
           </ResponsiveContainer>
@@ -126,7 +180,7 @@ export default function FiveDaysWeather({ data, unit }) {
               className="d-flex flex-row
               align-items-center"
             >
-              <p className="h5 fst-italic mb-0">
+              <p className="h5 mb-0">
                 <Moment unix format="HH:mm" tz="UTC">
                   {/* convert to local timezone */}
                   {data.dt + timeZone}
@@ -150,7 +204,56 @@ export default function FiveDaysWeather({ data, unit }) {
       {/* for 5 days forecast */}
       <div className="card mt-3">
         <div className="card-header lead">Next 5 days forecast:</div>
-        <div className="card-body d-flex flex-column overflow-auto "></div>
+        <div className="card-body d-flex flex-column overflow-auto ">
+          <ResponsiveContainer width="98%" height={300}>
+            <LineChart data={fiveDaysForecast}>
+              <Line
+                type="monotone"
+                dataKey="high"
+                stroke="#8884d8"
+                name="Expected high temperature"
+                des
+              />
+              <XAxis dataKey="date" />
+              <YAxis
+                width={40}
+                label={() => {
+                  return (
+                    <Text
+                      x={-35}
+                      y={30}
+                      dx={50}
+                      dy={150}
+                      offset={0}
+                      angle={-90}
+                    >
+                      Temperature
+                    </Text>
+                  );
+                }}
+              />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        {fiveDaysForecast.map((data) => (
+          <div
+            key={data.date}
+            className="d-flex flex-row
+              align-items-center justify-content-center mx-2"
+          >
+            <p className="h5 mb-0">{data.date}:&nbsp;</p>
+            {/* <img
+              src={`http://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
+              alt="weather condition"
+            ></img> */}
+            <span className="fw-light mb-0 fs-5">
+              High:&nbsp;
+              {Math.round(data.high)}°{displayTemp} - Low:&nbsp;
+              {Math.round(data.low)}°{displayTemp}.
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );

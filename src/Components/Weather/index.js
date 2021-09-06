@@ -40,7 +40,7 @@ export default function Weather({
   }
 
   return (
-    <Container className="justify-content-center border bg-light">
+    <Container fluid className="justify-content-center border bg-light">
       {/* use a router to get different component */}
       <BrowserRouter>
         <ul className="row p-0">

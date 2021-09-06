@@ -1,5 +1,4 @@
 import React from "react";
-import { Container, Button } from "react-bootstrap";
 import Moment from "react-moment";
 import "moment-timezone";
 
@@ -106,13 +105,14 @@ export default function CurrentWeather({ data, unit }) {
             <span>{data.clouds.all}%.</span>
             <br />
             <span className="text-muted">Visibility: </span>
-            <span>{data.visibility / 1000} km</span>
+            <span>{data.visibility / 1000} km.</span>
             <hr />
             <span className="text-muted">Sunrise: </span>
             <span>
               <Moment unix format="LT" tz="UTC">
                 {sunrise}
               </Moment>
+              .
             </span>
             <br />
             <span className="text-muted">Sunset: </span>
@@ -120,6 +120,7 @@ export default function CurrentWeather({ data, unit }) {
               <Moment unix format="LT" tz="UTC">
                 {sunset}
               </Moment>
+              .
             </span>
           </div>
         </div>
