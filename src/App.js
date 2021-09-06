@@ -11,6 +11,8 @@ import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
 import ErrorInfo from "./Components/ErrorInfo";
 import axios from "axios";
+import { BrowserRouter } from "react-router-dom";
+import backgroundImg from "./img/background-img.jpg";
 
 function App() {
   const [city, setCity] = useState("");
@@ -260,44 +262,52 @@ function App() {
   };
 
   return (
-    <div
-      className="d-flex justify-content-center align-items-center
+    <BrowserRouter basename="/weather">
+      <div
+        className="d-flex justify-content-center align-items-center
        flex-column h-100"
-    >
-      <p className="display-5 text-center">
-        Good {partOfDay}! Welcome to my weather app.
-      </p>
-      <CitySearch
-        //pass these functions and props down
-        handleSearchOnClick={handleSearchOnClick}
-        handleCityChange={handleCityChange}
-        handleCountryChange={handleCountryChange}
-        handleUnitOnChange={handleUnitOnChange}
-        openWeather={openWeather}
-        showAlert={showAlert}
-        unit={unit}
-      />
-      <Fade in={showAlert}>
-        <div id="alert">
-          <ErrorInfo
-            showAlert={showAlert}
-            handleClose={handleClose}
-            error={error}
-          />
-        </div>
-      </Fade>
-      <Collapse in={openWeather}>
-        <div id="weather" className="overflow-auto">
-          <Weather
-            weather={weather}
-            unit={unit}
-            forecast={forecast}
-            handleRefresh={handleRefresh}
-            handleChangeReport={handleChangeReport}
-          />
-        </div>
-      </Collapse>
-    </div>
+        style={{
+          backgroundImage: `url(${backgroundImg})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center center",
+        }}
+      >
+        <p className="display-5 text-center">
+          Good {partOfDay}! Welcome to my weather app.
+        </p>
+        <CitySearch
+          //pass these functions and props down
+          handleSearchOnClick={handleSearchOnClick}
+          handleCityChange={handleCityChange}
+          handleCountryChange={handleCountryChange}
+          handleUnitOnChange={handleUnitOnChange}
+          openWeather={openWeather}
+          showAlert={showAlert}
+          unit={unit}
+        />
+        <Fade in={showAlert}>
+          <div id="alert">
+            <ErrorInfo
+              showAlert={showAlert}
+              handleClose={handleClose}
+              error={error}
+            />
+          </div>
+        </Fade>
+        <Collapse in={openWeather}>
+          <div id="weather" className="overflow-auto">
+            <Weather
+              weather={weather}
+              unit={unit}
+              forecast={forecast}
+              handleRefresh={handleRefresh}
+              handleChangeReport={handleChangeReport}
+            />
+          </div>
+        </Collapse>
+      </div>
+    </BrowserRouter>
   );
 }
 
