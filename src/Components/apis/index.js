@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const API_KEY = "690a99e3fce9056aa266481b4f8e7946";
+const API_KEY = process.env.REACT_APP_OPEN_WEATHER_API_KEY;
 
 export const getWeatherData = (city, country, unit) =>
   Axios.get(
