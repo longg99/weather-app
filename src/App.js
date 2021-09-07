@@ -11,7 +11,7 @@ import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
 import ErrorInfo from "./Components/ErrorInfo";
 import axios from "axios";
-import { BrowserRouter, HashRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import backgroundImg from "./img/background-img.jpg";
 
 function App() {
@@ -31,6 +31,8 @@ function App() {
   const [refresh, setRefresh] = useState(false);
   //current or forecast (5 days)
   const [report, setReport] = useState("current");
+  //show/hide the hello text
+  const [showInput, setShowInput] = useState(true);
 
   useEffect(() => {
     //get the current time
@@ -191,6 +193,14 @@ function App() {
     }
   }, [error, city]);
 
+  //every time the weather is open, hide the input section
+  useEffect(() => {
+    if (openWeather)
+      //hide the input section so the user have more space
+      setShowInput(false);
+    else setShowInput(true);
+  }, [openWeather]);
+
   //handle the 401 since we cannot catch using the .catch
   //using a 401 response interceptor
   axios.interceptors.response.use(
@@ -265,7 +275,7 @@ function App() {
     <HashRouter basename="/">
       <div
         className="d-flex justify-content-center align-items-center
-       flex-column h-100"
+       flex-column h-100 overflow-hidden"
         style={{
           backgroundImage: `url(${backgroundImg})`,
           backgroundSize: "cover",
@@ -273,9 +283,10 @@ function App() {
           backgroundPosition: "center center",
         }}
       >
-        <p className="display-5 text-center">
+        <p className={showInput ? "display-6 text-center w-100" : "d-none"}>
           Good {partOfDay}! Welcome to my weather app.
         </p>
+
         <CitySearch
           //pass these functions and props down
           handleSearchOnClick={handleSearchOnClick}
@@ -285,6 +296,7 @@ function App() {
           openWeather={openWeather}
           showAlert={showAlert}
           unit={unit}
+          show={showInput}
         />
         <Fade in={showAlert}>
           <div id="alert">

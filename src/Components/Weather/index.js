@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Button, ListGroup } from "react-bootstrap";
 import "moment-timezone";
-import {
-  Route,
-  Switch,
-  BrowserRouter,
-  Link,
-  Redirect,
-  HashRouter,
-} from "react-router-dom";
+import { Route, Switch, Link, Redirect, HashRouter } from "react-router-dom";
 import CurrentWeather from "./CurrentWeather";
 import FiveDaysWeather from "./FiveDaysWeather";
 

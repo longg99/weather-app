@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, FloatingLabel } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function CitySearch({
@@ -10,6 +10,7 @@ export default function CitySearch({
   openWeather,
   showAlert,
   unit,
+  show,
 }) {
   //state to only trigger the onChanges when user stopped typing
   const [city, setCity] = useState("");
@@ -43,64 +44,86 @@ export default function CitySearch({
         e.preventDefault();
       }}
     >
-      <Form.Group className="mb-2">
-        <Form.Label aria-required>Enter your city name:</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="City..."
-          onChange={(e) => setCity(e.target.value)}
-          autoFocus
-          required
-        />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label aria-required>
-          Enter your country code (optional):
-        </Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Country code..."
-          onChange={(e) => setCountry(e.target.value)}
-        />
-        <small className="form-text text-muted">
-          For a more precise result, please specify the country code. Refer to
-          this{" "}
-          <a
-            href="https://www.iso.org/obp/ui/#home"
-            target="_blank"
-            rel="noreferrer"
+      {/* if the weather component is showing, hide the input */}
+      <div className={show ? "" : "d-none"}>
+        <div className="d-flex justify-content-center">
+          <Button
+            onClick={handleSearchOnClick}
+            aria-expanded="false"
+            aria-controls="weather alert"
+            type="submit"
           >
-            link
-          </a>
-          &nbsp;for the country codes.
-        </small>
-      </Form.Group>
-
-      <div className="mt-2">
-        <Form.Group className="d-flex justify-content-center">
-          <Form.Check
-            name="unitRadio"
-            inline
-            label="Metric"
-            type="radio"
-            onChange={handleUnitOnChange}
-            value="metric"
-            checked={unit === "metric"}
-          />
-          <Form.Check
-            inline
-            label="Imperial"
-            name="unitRadio"
-            onChange={handleUnitOnChange}
-            type="radio"
-            value="imperial"
-            checked={unit === "imperial"}
-          />
+            Use my current location
+          </Button>
+        </div>
+        <div className="d-flex justify-content-center">
+          <span className="lead">-----------OR-----------</span>
+        </div>
+        <Form.Group className="">
+          <FloatingLabel
+            controlId="cityName"
+            label="City name:"
+            className="mb-3"
+          >
+            <Form.Control
+              type="text"
+              placeholder="City..."
+              onChange={(e) => setCity(e.target.value)}
+              autoFocus
+              required
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="countryCode"
+            label="Country code (optional):"
+          >
+            <Form.Control
+              type="text"
+              placeholder="Country code..."
+              onChange={(e) => setCountry(e.target.value)}
+            />
+          </FloatingLabel>
         </Form.Group>
+        <Form.Group>
+          <small className="form-text text-muted">
+            Use country code for a more precise result. Refer to this{" "}
+            <a
+              href="https://www.iso.org/obp/ui/#home"
+              target="_blank"
+              rel="noreferrer"
+            >
+              link
+            </a>
+            &nbsp;for the country codes.
+          </small>
+        </Form.Group>
+
+        <div className="mt-2">
+          <Form.Group className="d-flex justify-content-center">
+            <Form.Check
+              name="unitRadio"
+              inline
+              label="Metric"
+              type="radio"
+              onChange={handleUnitOnChange}
+              value="metric"
+              checked={unit === "metric"}
+            />
+            <Form.Check
+              inline
+              label="Imperial"
+              name="unitRadio"
+              onChange={handleUnitOnChange}
+              type="radio"
+              value="imperial"
+              checked={unit === "imperial"}
+            />
+          </Form.Group>
+        </div>
       </div>
       <div className="d-flex justify-content-center">
         <Button
-          style={{ marginTop: 10 }}
+          className="mt-1"
           onClick={handleSearchOnClick}
           aria-expanded="false"
           aria-controls="weather alert"

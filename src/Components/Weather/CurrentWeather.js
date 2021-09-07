@@ -60,7 +60,7 @@ export default function CurrentWeather({ data, unit }) {
           {capitalizeFirstLetter(weather.description)}
         </p>
       </div>
-      <p className="text-center fs-5">
+      <p className="text-center fs-6">
         {capitalizeFirstLetter(weather.description)} condition is forecasted for
         now.
       </p>
