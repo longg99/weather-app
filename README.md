@@ -2,6 +2,27 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+### Live Demo: https://longg99.github.io/weather-app/
+
+### Introduction
+
+This is my simple, minimal weather app based on the OpenWeatherMap's free API. This project really helped me to learn ReactJS and improve my programming skill.
+It is built with JS and ReactJS, with some libraries such as moment, lodash, react-router, react-bootstrap and so on. It has the ability to show the current weather report as well as the forecast every 3 hours and the next five days.
+
+### Getting and using a free API Key
+
+If you want to change the API key, you can change the const API_KEY in the index.js file at src/Components/apis with your API key. Visit https://openweathermap.org/appid for more
+details on how to get an API key. Note that it will take some time for the new registered API key to work.
+
+The default API key in the app is my personal API key. It is a free key so it has several limitations (60 calls/minute,
+1,000,000 calls/month). One weather, forecast query, refresh or unit change count as one API call. The default key should ONLY be used for demonstration purposes. To avoid reaching the limit, please use your own API key.
+
+### Upcoming feature
+
+I am trying to implement the ability to read user location and display the weather data accordingly.
+
+### Thank you for using the app!
+
 ## Available Scripts
 
 In the project directory, you can run:
