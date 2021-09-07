@@ -17,7 +17,7 @@ The default API key in the app is my personal API key. It is a free key so it ha
 
 ### Upcoming feature
 
-I am trying to implement the ability to read user location and display the weather data accordingly. Note that the "Use my current location" is not working for now.
+I am trying to implement the ability to read user location and display the weather data accordingly. Note that the "Use my current location" button is not working for now.
 
 ### Thank you for using the app!
 
