@@ -46,13 +46,10 @@ export default function CitySearch({
     >
       {/* if the weather component is showing, hide the input */}
       <div className={show ? "" : "d-none"}>
-        <div className="d-flex justify-content-center">
+        <div className="d-flex justify-content-center mb-3">
           <Button aria-expanded="false" aria-controls="weather alert">
             Use my current location
           </Button>
-        </div>
-        <div className="d-flex justify-content-center">
-          <span className="lead">-----------OR-----------</span>
         </div>
         <Form.Group className="">
           <FloatingLabel
@@ -92,30 +89,30 @@ export default function CitySearch({
             &nbsp;for the country codes.
           </small>
         </Form.Group>
-
-        <div className="mt-2">
-          <Form.Group className="d-flex justify-content-center">
-            <Form.Check
-              name="unitRadio"
-              inline
-              label="Metric"
-              type="radio"
-              onChange={handleUnitOnChange}
-              value="metric"
-              checked={unit === "metric"}
-            />
-            <Form.Check
-              inline
-              label="Imperial"
-              name="unitRadio"
-              onChange={handleUnitOnChange}
-              type="radio"
-              value="imperial"
-              checked={unit === "imperial"}
-            />
-          </Form.Group>
-        </div>
       </div>
+      <div className="mt-2">
+        <Form.Group className="d-flex justify-content-center">
+          <Form.Check
+            name="unitRadio"
+            inline
+            label="Metric"
+            type="radio"
+            onChange={handleUnitOnChange}
+            value="metric"
+            checked={unit === "metric"}
+          />
+          <Form.Check
+            inline
+            label="Imperial"
+            name="unitRadio"
+            onChange={handleUnitOnChange}
+            type="radio"
+            value="imperial"
+            checked={unit === "imperial"}
+          />
+        </Form.Group>
+      </div>
+
       <div className="d-flex justify-content-center">
         <Button
           className="mt-1"
