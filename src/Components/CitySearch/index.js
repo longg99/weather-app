@@ -47,12 +47,7 @@ export default function CitySearch({
       {/* if the weather component is showing, hide the input */}
       <div className={show ? "" : "d-none"}>
         <div className="d-flex justify-content-center">
-          <Button
-            onClick={handleSearchOnClick}
-            aria-expanded="false"
-            aria-controls="weather alert"
-            type="submit"
-          >
+          <Button aria-expanded="false" aria-controls="weather alert">
             Use my current location
           </Button>
         </div>
