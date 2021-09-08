@@ -70,7 +70,6 @@ export default function CitySearch({
               placeholder="City..."
               onChange={(e) => setCity(e.target.value)}
               autoFocus
-              required
             />
           </FloatingLabel>
           <FloatingLabel

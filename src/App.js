@@ -7,6 +7,7 @@ import {
   get5daysWeatherData,
   get5daysWeatherByCity,
   getWeatherDataCurrLocation,
+  get5daysDataCurrLocation,
 } from "./Components/apis";
 import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
@@ -38,6 +39,8 @@ function App() {
   //array of 2 elems stand for lat and lon
   //default is 0
   const [location, setLocation] = useState([0, 0]);
+  //the user wants to use current location?
+  const [useLocation, setUseLocation] = useState(false);
 
   useEffect(() => {
     //get the current time
@@ -48,6 +51,8 @@ function App() {
   useEffect(() => {
     //only call the api when the user enter a city
     if (city !== "" || refresh) {
+      //don't use location anymore
+      setUseLocation(false);
       //if user choose current weather, call the API to get the current weather
       if (report === "current") {
         if (country === "") {
@@ -186,6 +191,87 @@ function App() {
     return () => setRefresh(false);
   }, [city, country, unit, refresh, report]);
 
+  //effect when the user want to use their current location
+  useEffect(() => {
+    if (useLocation) {
+      // setCity("");
+      //if we have location data, lat and lon
+      if ((location[0] !== 0 && location[1] !== 0) || refresh) {
+        if (report === "current") {
+          getWeatherDataCurrLocation(location[0], location[1], unit)
+            .then((res) => {
+              console.log(
+                "calling the current weather api with current location (lat:" +
+                  location[0],
+                ",long:" + location[1]
+              );
+              setWeather(res.data);
+              //reset the error
+              setError("");
+              //open the weather
+              setOpenWeather(true);
+              setShowAlert(false);
+            }) //catch error
+            .catch(function (error) {
+              //if we got error and respond
+              if (error.response) {
+                //set the error message accordingly
+                if (error.response.data.cod === "404") {
+                  setError("Please enter a valid city/country!");
+                } else if (error.response.data.cod === "429") {
+                  setError(
+                    "Sorry! The number of calls exceeded the server's allowance." +
+                      " Please try again in a few minutes..."
+                  );
+                }
+              } else if (error.request) {
+                setError(
+                  "Sorry! We are not receiving any request from the server." +
+                    " Please try again in a few minutes..."
+                );
+              }
+            });
+        } else if (report === "five days") {
+          get5daysDataCurrLocation(location[0], location[1], unit)
+            .then((res) => {
+              console.log(
+                "calling the current FORECAST api with current location (lat:" +
+                  location[0],
+                ",long:" + location[1]
+              );
+              setForecast(res.data);
+              //reset the error
+              setError("");
+              setOpenWeather(true);
+              setShowAlert(false);
+            }) //catch error
+            .catch(function (error) {
+              //if we got error and respond
+              if (error.response) {
+                //set the error message accordingly
+                if (error.response.data.cod === "404") {
+                  setError("Please enter a valid city/country!");
+                } else if (error.response.data.cod === "429") {
+                  setError(
+                    "Sorry! The number of calls exceeded the server's allowance." +
+                      " Please try again in a few minutes..."
+                  );
+                }
+              } else if (error.request) {
+                setError(
+                  "Sorry! We are not receiving any request from the server." +
+                    " Please try again in a few minutes..."
+                );
+              }
+            });
+        }
+      }
+    }
+    return () => {
+      setRefresh(false);
+    };
+  }, [useLocation, location, refresh, report, unit]);
+
   //this effect will update page base onthe error and hide/show the weather section
   useEffect(() => {
     if (error !== "") {
@@ -193,7 +279,7 @@ function App() {
       setOpenWeather(false);
     } else {
       setShowAlert(false);
-      //if we have city only show the weather
+      //if we have city or the weather data only show the weather
       if (city !== "") setOpenWeather(true);
     }
   }, [error, city]);
@@ -232,7 +318,7 @@ function App() {
   //handle the search btn on click
   const handleSearchOnClick = () => {
     //check if we have an error
-    if (error === "" && city !== "") {
+    if (error === "" || city === "") {
       //show the weather based on the city passed
       //based on the value of the input field
       setShowAlert(false);
@@ -242,14 +328,16 @@ function App() {
       //set the error
       if (city === "") setError("You must enter a city first!");
       //show the alert
-      setShowAlert(!showAlert);
+      setShowAlert(true);
     }
   };
 
   //handle city change
   const handleCityChange = (newCity) => {
-    //set the new country
+    //set the new city
     setCity(newCity);
+    // //if user enters a city, reset the geolocation
+    // setLocation([0, 0]);
   };
 
   //handle country change
@@ -288,13 +376,17 @@ function App() {
     //use the geolocation API to return the user's position
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(setPosition);
-    } else console.log("Get location is not supported!");
+      setUseLocation(true);
+    } else {
+      setError(
+        "Sorry! We couldn't get your geolocation. Either your browser does not support it or you did not give the permission. Please try again."
+      );
+      setShowAlert(true);
+    }
   };
 
-  console.log("weather: ", weather);
-  console.log("forecast: ", forecast);
-  console.log("lat:", location[0], "long:", location[1]);
-
+  console.log(city);
+  console.log(useLocation);
   return (
     <HashRouter basename="/">
       <div
