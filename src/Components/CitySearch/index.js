@@ -12,6 +12,7 @@ export default function CitySearch({
   showAlert,
   unit,
   show,
+  useCity,
 }) {
   //state to only trigger the onChanges when user stopped typing
   const [city, setCity] = useState("");
@@ -37,6 +38,11 @@ export default function CitySearch({
       clearTimeout(timeOut);
     };
   }, [city, country, handleCityChange, handleCountryChange]);
+
+  //reset the city if user does not use city search
+  useEffect(() => {
+    if (!useCity) setCity("");
+  }, [useCity]);
 
   return (
     <Form
@@ -68,6 +74,7 @@ export default function CitySearch({
             <Form.Control
               type="text"
               placeholder="City..."
+              value={city}
               onChange={(e) => setCity(e.target.value)}
               autoFocus
             />

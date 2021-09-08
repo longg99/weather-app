@@ -41,6 +41,8 @@ function App() {
   const [location, setLocation] = useState([0, 0]);
   //the user wants to use current location?
   const [useLocation, setUseLocation] = useState(false);
+  //or use city search, true by default
+  const [useCity, setUseCity] = useState(true);
 
   useEffect(() => {
     //get the current time
@@ -50,151 +52,155 @@ function App() {
   //this effect will be used every time the city or country or unit changes
   useEffect(() => {
     //only call the api when the user enter a city
-    if (city !== "" || refresh) {
-      //don't use location anymore
+    if (useCity) {
       setUseLocation(false);
-      //if user choose current weather, call the API to get the current weather
-      if (report === "current") {
-        if (country === "") {
-          //call the api and get the current weather
-          getWeatherDataByCity(city, unit)
-            .then((res) => {
-              console.log("calling the current weather api with only city");
-              setWeather(res.data);
-              //reset the error
-              setError("");
-            })
-            //catch error
-            .catch(function (error) {
-              //if we got error and respond
-              if (error.response) {
-                //set the error message accordingly
-                if (error.response.data.cod === "404") {
-                  setError("Please enter a valid city/country!");
-                } else if (error.response.data.cod === "429") {
+      if (city !== "" || refresh) {
+        //don't use location anymore
+
+        //if user choose current weather, call the API to get the current weather
+        if (report === "current") {
+          if (country === "") {
+            //call the api and get the current weather
+            getWeatherDataByCity(city, unit)
+              .then((res) => {
+                console.log("calling the current weather api with only city");
+                setWeather(res.data);
+                //reset the error
+                setError("");
+              })
+              //catch error
+              .catch(function (error) {
+                //if we got error and respond
+                if (error.response) {
+                  //set the error message accordingly
+                  if (error.response.data.cod === "404") {
+                    setError("Please enter a valid city/country!");
+                  } else if (error.response.data.cod === "429") {
+                    setError(
+                      "Sorry! The number of calls exceeded the server's allowance." +
+                        " Please try again in a few minutes..."
+                    );
+                  }
+                } else if (error.request) {
                   setError(
-                    "Sorry! The number of calls exceeded the server's allowance." +
+                    "Sorry! We are not receiving any request from the server." +
                       " Please try again in a few minutes..."
                   );
                 }
-              } else if (error.request) {
-                setError(
-                  "Sorry! We are not receiving any request from the server." +
-                    " Please try again in a few minutes..."
+              });
+          } else {
+            //call the api using city and country
+            getWeatherData(city, country, unit)
+              .then((res) => {
+                console.log(
+                  "calling the current weather api with city and country"
                 );
-              }
-            });
-        } else {
-          //call the api using city and country
-          getWeatherData(city, country, unit)
-            .then((res) => {
-              console.log(
-                "calling the current weather api with city and country"
-              );
-              setWeather(res.data);
-              //reset the error
-              setError("");
-            })
-            //catch error
-            .catch(function (error) {
-              //if we got error
-              if (error.response) {
-                //set the error message accordingly
-                if (error.response.data.cod === "404") {
-                  setError("Please enter a valid city/country!");
-                } else if (error.response.data.cod === "429") {
+                setWeather(res.data);
+                //reset the error
+                setError("");
+              })
+              //catch error
+              .catch(function (error) {
+                //if we got error
+                if (error.response) {
+                  //set the error message accordingly
+                  if (error.response.data.cod === "404") {
+                    setError("Please enter a valid city/country!");
+                  } else if (error.response.data.cod === "429") {
+                    setError(
+                      "Sorry! The number of calls exceeded the server's allowance." +
+                        " Please try again in a few minutes..."
+                    );
+                  }
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  console.log(error.request);
+                } else if (error.request) {
                   setError(
-                    "Sorry! The number of calls exceeded the server's allowance." +
+                    "Sorry! We are not receiving any request from the server." +
                       " Please try again in a few minutes..."
                   );
                 }
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-              } else if (error.request) {
-                setError(
-                  "Sorry! We are not receiving any request from the server." +
-                    " Please try again in a few minutes..."
-                );
-              }
-            });
+              });
+          }
         }
-      }
-      //else show the forecast using the forecast API
-      else if (report === "five days") {
-        if (country === "") {
-          //call the api and get the forecast
-          get5daysWeatherByCity(city, unit)
-            .then((res) => {
-              console.log("calling the FORECAST api with only city");
-              setForecast(res.data);
-              //reset the error
-              setError("");
-            })
-            //catch error
-            .catch(function (error) {
-              //if we got error and respond
-              if (error.response) {
-                //set the error message accordingly
-                if (error.response.data.cod === "404") {
-                  setError("Please enter a valid city/country!");
-                } else if (error.response.data.cod === "429") {
+        //else show the forecast using the forecast API
+        else if (report === "five days") {
+          if (country === "") {
+            //call the api and get the forecast
+            get5daysWeatherByCity(city, unit)
+              .then((res) => {
+                console.log("calling the FORECAST api with only city");
+                setForecast(res.data);
+                //reset the error
+                setError("");
+              })
+              //catch error
+              .catch(function (error) {
+                //if we got error and respond
+                if (error.response) {
+                  //set the error message accordingly
+                  if (error.response.data.cod === "404") {
+                    setError("Please enter a valid city/country!");
+                  } else if (error.response.data.cod === "429") {
+                    setError(
+                      "Sorry! The number of calls exceeded the server's allowance." +
+                        " Please try again in a few minutes..."
+                    );
+                  }
+                } else if (error.request) {
                   setError(
-                    "Sorry! The number of calls exceeded the server's allowance." +
+                    "Sorry! We are not receiving any request from the server." +
                       " Please try again in a few minutes..."
                   );
                 }
-              } else if (error.request) {
-                setError(
-                  "Sorry! We are not receiving any request from the server." +
-                    " Please try again in a few minutes..."
+              });
+          } else {
+            //call the forecast api using city and country
+            get5daysWeatherData(city, country, unit)
+              .then((res) => {
+                console.log(
+                  "calling the FORECAST weather api with city and country"
                 );
-              }
-            });
-        } else {
-          //call the forecast api using city and country
-          get5daysWeatherData(city, country, unit)
-            .then((res) => {
-              console.log(
-                "calling the FORECAST weather api with city and country"
-              );
-              setForecast(res.data);
-              //reset the error
-              setError("");
-            })
-            //catch error
-            .catch(function (error) {
-              //if we got error
-              if (error.response) {
-                //set the error message accordingly
-                if (error.response.data.cod === "404") {
-                  setError("Please enter a valid city/country!");
-                } else if (error.response.data.cod === "429") {
+                setForecast(res.data);
+                //reset the error
+                setError("");
+              })
+              //catch error
+              .catch(function (error) {
+                //if we got error
+                if (error.response) {
+                  //set the error message accordingly
+                  if (error.response.data.cod === "404") {
+                    setError("Please enter a valid city/country!");
+                  } else if (error.response.data.cod === "429") {
+                    setError(
+                      "Sorry! The number of calls exceeded the server's allowance." +
+                        " Please try again in a few minutes..."
+                    );
+                  }
+                } else if (error.request) {
+                  // The request was made but no response was received
+                  console.log(error.request);
+                } else if (error.request) {
                   setError(
-                    "Sorry! The number of calls exceeded the server's allowance." +
+                    "Sorry! We are not receiving any request from the server." +
                       " Please try again in a few minutes..."
                   );
                 }
-              } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-              } else if (error.request) {
-                setError(
-                  "Sorry! We are not receiving any request from the server." +
-                    " Please try again in a few minutes..."
-                );
-              }
-            });
+              });
+          }
         }
       }
     }
     return () => setRefresh(false);
-  }, [city, country, unit, refresh, report]);
+  }, [city, useCity, country, unit, refresh, report]);
 
   //effect when the user want to use their current location
   useEffect(() => {
     if (useLocation) {
-      // setCity("");
+      setUseCity(false);
+      setCity("");
       //if we have location data, lat and lon
       if ((location[0] !== 0 && location[1] !== 0) || refresh) {
         if (report === "current") {
@@ -336,8 +342,7 @@ function App() {
   const handleCityChange = (newCity) => {
     //set the new city
     setCity(newCity);
-    // //if user enters a city, reset the geolocation
-    // setLocation([0, 0]);
+    if (city !== "") setUseCity(true);
   };
 
   //handle country change
@@ -385,8 +390,10 @@ function App() {
     }
   };
 
-  console.log(city);
-  console.log(useLocation);
+  console.log("city: ", city);
+  console.log("use location: ", useLocation);
+  console.log("use city: ", useCity);
+
   return (
     <HashRouter basename="/">
       <div
@@ -414,6 +421,7 @@ function App() {
           showAlert={showAlert}
           unit={unit}
           show={showInput}
+          useCity={useCity}
         />
         <Fade in={showAlert}>
           <div id="alert">
