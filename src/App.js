@@ -6,6 +6,7 @@ import {
   getWeatherDataByCity,
   get5daysWeatherData,
   get5daysWeatherByCity,
+  getWeatherDataCurrLocation,
 } from "./Components/apis";
 import CitySearch from "./Components/CitySearch";
 import Weather from "./Components/Weather";
@@ -33,6 +34,10 @@ function App() {
   const [report, setReport] = useState("current");
   //show/hide the hello text
   const [showInput, setShowInput] = useState(true);
+  //the state storing the current location of the user
+  //array of 2 elems stand for lat and lon
+  //default is 0
+  const [location, setLocation] = useState([0, 0]);
 
   useEffect(() => {
     //get the current time
@@ -209,7 +214,9 @@ function App() {
     },
     function (error) {
       if ("401" === error.response.status) {
-        setError("Sorry! API key error. Please try again later.");
+        setError(
+          "Sorry! API key error. Please try again with another API key."
+        );
       } else {
         return Promise.reject(error);
       }
@@ -271,6 +278,23 @@ function App() {
     setReport(val);
   };
 
+  //this function is to set the location
+  const setPosition = (position) => {
+    //set the location (lat and long) in the state of the main app
+    setLocation([position.coords.latitude, position.coords.longitude]);
+  };
+
+  const handleGetLocation = () => {
+    //use the geolocation API to return the user's position
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(setPosition);
+    } else console.log("Get location is not supported!");
+  };
+
+  console.log("weather: ", weather);
+  console.log("forecast: ", forecast);
+  console.log("lat:", location[0], "long:", location[1]);
+
   return (
     <HashRouter basename="/">
       <div
@@ -293,6 +317,7 @@ function App() {
           handleCityChange={handleCityChange}
           handleCountryChange={handleCountryChange}
           handleUnitOnChange={handleUnitOnChange}
+          handleGetLocation={handleGetLocation}
           openWeather={openWeather}
           showAlert={showAlert}
           unit={unit}

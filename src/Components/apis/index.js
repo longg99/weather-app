@@ -21,3 +21,13 @@ export const get5daysWeatherData = (city, country, unit) =>
   Axios.get(
     `https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&units=${unit}&appid=${API_KEY}`
   );
+
+export const getWeatherDataCurrLocation = (lat, lon, unit) =>
+  Axios.get(
+    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`
+  );
+
+export const ge5daysDataCurrLocation = (lat, lon, unit) =>
+  Axios.get(
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${unit}&appid=${API_KEY}`
+  );
