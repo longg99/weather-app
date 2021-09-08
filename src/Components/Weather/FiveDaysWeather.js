@@ -184,7 +184,7 @@ export default function FiveDaysWeather({ data, unit }) {
                 :
               </p>
               <img
-                src={`http://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
+                src={`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
                 alt="weather condition"
               ></img>
               <p className="fw-light fs-5 mb-0">

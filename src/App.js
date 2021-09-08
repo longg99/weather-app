@@ -324,17 +324,17 @@ function App() {
   //handle the search btn on click
   const handleSearchOnClick = () => {
     //check if we have an error
-    if (error === "" || city === "") {
+    if ((error === "" && city !== "") || useLocation) {
       //show the weather based on the city passed
       //based on the value of the input field
       setShowAlert(false);
       setOpenWeather(!openWeather);
     } else {
       //else
-      //set the error
-      if (city === "") setError("You must enter a city first!");
+      //set the error if city is not given and the user does not use location
+      if (!useLocation && city === "") setError("You must enter a city first!");
       //show the alert
-      setShowAlert(true);
+      setShowAlert(!showAlert);
     }
   };
 
@@ -393,12 +393,13 @@ function App() {
   console.log("city: ", city);
   console.log("use location: ", useLocation);
   console.log("use city: ", useCity);
+  console.log("error: ", error);
 
   return (
     <HashRouter basename="/">
       <div
         className="d-flex justify-content-center align-items-center
-       flex-column h-100 overflow-hidden"
+       flex-column h-100"
         style={{
           backgroundImage: `url(${backgroundImg})`,
           backgroundSize: "cover",
@@ -406,10 +407,11 @@ function App() {
           backgroundPosition: "center center",
         }}
       >
-        <p className={showInput ? "display-6 text-center w-100" : "d-none"}>
-          Good {partOfDay}! Welcome to my weather app.
-        </p>
-
+        <Fade in={!openWeather} unmountOnExit={true}>
+          <p className={showInput ? "display-6 text-center w-100" : "d-none"}>
+            Good {partOfDay}! Welcome to my weather app.
+          </p>
+        </Fade>
         <CitySearch
           //pass these functions and props down
           handleSearchOnClick={handleSearchOnClick}
@@ -423,7 +425,7 @@ function App() {
           show={showInput}
           useCity={useCity}
         />
-        <Fade in={showAlert}>
+        <Fade in={showAlert} unmountOnExit={true}>
           <div id="alert">
             <ErrorInfo
               showAlert={showAlert}
@@ -432,8 +434,8 @@ function App() {
             />
           </div>
         </Fade>
-        <Collapse in={openWeather}>
-          <div id="weather" className="overflow-auto">
+        <Fade in={openWeather} unmountOnExit={true}>
+          <div id="weather" className="overflow-auto m-0 p-0">
             <Weather
               weather={weather}
               unit={unit}
@@ -442,7 +444,7 @@ function App() {
               handleChangeReport={handleChangeReport}
             />
           </div>
-        </Collapse>
+        </Fade>
       </div>
     </HashRouter>
   );

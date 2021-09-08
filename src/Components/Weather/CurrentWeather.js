@@ -25,7 +25,7 @@ export default function CurrentWeather({ data, unit }) {
   const sunset = data.sys.sunset + timeZone;
 
   //get the url of the icon
-  const imgUrl = `http://openweathermap.org/img/wn/${weather.icon}.png`;
+  const imgUrl = `https://openweathermap.org/img/wn/${weather.icon}.png`;
 
   //unit is metric or imperial?
   const displayTemp = unit === "metric" ? "C" : "F";

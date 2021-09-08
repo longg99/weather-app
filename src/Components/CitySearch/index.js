@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, FloatingLabel } from "react-bootstrap";
+import { Button, Form, FloatingLabel, Fade } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function CitySearch({
@@ -11,7 +11,6 @@ export default function CitySearch({
   openWeather,
   showAlert,
   unit,
-  show,
   useCity,
 }) {
   //state to only trigger the onChanges when user stopped typing
@@ -53,7 +52,7 @@ export default function CitySearch({
       }}
     >
       {/* if the weather component is showing, hide the input */}
-      <div className={show ? "" : "d-none"}>
+      <div>
         <div className="d-flex justify-content-center mb-3">
           <Button
             aria-expanded="false"

@@ -4,6 +4,7 @@ import "moment-timezone";
 import { Route, Switch, Link, Redirect, HashRouter } from "react-router-dom";
 import CurrentWeather from "./CurrentWeather";
 import FiveDaysWeather from "./FiveDaysWeather";
+import "./style.css";
 
 export default function Weather({
   weather,
@@ -40,7 +41,11 @@ export default function Weather({
   }
 
   return (
-    <Container fluid className="justify-content-center border bg-light">
+    <Container
+      fluid
+      className="justify-content-center border bg-light"
+      id="weatherSection"
+    >
       {/* use a router to get different component */}
       <HashRouter>
         <ul className="row p-0">
