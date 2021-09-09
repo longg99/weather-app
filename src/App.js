@@ -390,11 +390,6 @@ function App() {
     }
   };
 
-  console.log("city: ", city);
-  console.log("use location: ", useLocation);
-  console.log("use city: ", useCity);
-  console.log("error: ", error);
-
   return (
     <HashRouter basename="/">
       <div
@@ -407,11 +402,10 @@ function App() {
           backgroundPosition: "center center",
         }}
       >
-        <Fade in={!openWeather} unmountOnExit={true}>
-          <p className={showInput ? "display-6 text-center w-100" : "d-none"}>
-            Good {partOfDay}! Welcome to my weather app.
-          </p>
-        </Fade>
+        {/* display if weather is not shown */}
+        <p className={showInput ? "display-6 text-center w-100" : "d-none"}>
+          Good {partOfDay}! Welcome to my weather app.
+        </p>
         <CitySearch
           //pass these functions and props down
           handleSearchOnClick={handleSearchOnClick}
@@ -422,7 +416,6 @@ function App() {
           openWeather={openWeather}
           showAlert={showAlert}
           unit={unit}
-          show={showInput}
           useCity={useCity}
         />
         <Fade in={showAlert} unmountOnExit={true}>
@@ -434,7 +427,7 @@ function App() {
             />
           </div>
         </Fade>
-        <Fade in={openWeather} unmountOnExit={true}>
+        <Collapse in={openWeather} unmountOnExit={true}>
           <div id="weather" className="overflow-auto m-0 p-0">
             <Weather
               weather={weather}
@@ -444,7 +437,7 @@ function App() {
               handleChangeReport={handleChangeReport}
             />
           </div>
-        </Fade>
+        </Collapse>
       </div>
     </HashRouter>
   );

@@ -17,7 +17,14 @@ The default API key in the app is my personal API key. It is a free key so it ha
 
 ### Upcoming feature
 
-I am trying to implement the ability to read user location and display the weather data accordingly. Note that the "Use my current location" button is not working for now.
+I am trying to implement the ability to read user location and display the weather data accordingly.
+
+UPDATE: the feature is here and working! Your browser should support GeoLocation API and you should give the permission to read your location
+to work. This app WILL NOT store your location.
+
+### Notes
+
+This app is tested and working on Safari on iOS.
 
 ### Thank you for using the app!
 
